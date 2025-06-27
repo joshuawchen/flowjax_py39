@@ -34,7 +34,7 @@ jobs:
 
     environment:
       name: pypi
-      url: https://pypi.org/p/flowjax
+      url: https://pypi.org/p/flowjax_py39
 
     permissions:
       id-token: write # Mandatory for trusted publishing
