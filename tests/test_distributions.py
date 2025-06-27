@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from math import prod
-from typing import NamedTuple
+from typing import NamedTuple, Union
 
 import equinox as eqx
 import jax.numpy as jnp
@@ -9,8 +9,8 @@ import numpy as np
 import pytest
 from jax.scipy.stats import multivariate_normal
 
-from flowjax.bijections import AdditiveCondition, Affine, Exp
-from flowjax.distributions import (
+from flowjax_py39.bijections import AdditiveCondition, Affine, Exp
+from flowjax_py39.distributions import (
     AbstractDistribution,
     AbstractTransformed,
     Beta,
@@ -122,7 +122,7 @@ class _TestDist(AbstractDistribution):
     "Toy distribution object, for testing of distribution broadcasting."
 
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None
+    cond_shape: Union[tuple[int, ...], None]
 
     def __init__(self, shape, cond_shape=None):
         self.shape = shape

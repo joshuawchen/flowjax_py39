@@ -5,7 +5,7 @@ A layer in a planar flow introduced in https://arxiv.org/pdf/1505.05770.pdf.
 
 from collections.abc import Callable
 from functools import partial
-from typing import ClassVar, Literal
+from typing import ClassVar, Literal, Union
 
 import equinox as eqx
 import jax.numpy as jnp
@@ -14,7 +14,7 @@ from jax import nn
 from jax.numpy.linalg import norm
 from jaxtyping import Array, Float, PRNGKeyArray
 
-from flowjax.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.bijection import AbstractBijection
 
 
 class Planar(AbstractBijection):
@@ -43,18 +43,18 @@ class Planar(AbstractBijection):
     """
 
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None
-    conditioner: Callable | None
-    params: Array | None
-    negative_slope: float | None
+    cond_shape: Union[tuple[int, ...], None]
+    conditioner: Union[Callable, None]
+    params: Union[Array, None]
+    negative_slope: Union[float, None]
 
     def __init__(
         self,
         key: PRNGKeyArray,
         *,
         dim: int,
-        cond_dim: int | None = None,
-        negative_slope: float | None = None,
+        cond_dim: Union[int, None] = None,
+        negative_slope: Union[float, None] = None,
         **mlp_kwargs,
     ):
         self.shape = (dim,)
@@ -100,16 +100,16 @@ class _UnconditionalPlanar(AbstractBijection):
     weight: Array
     _act_scale: Array
     bias: Array
-    activation: Literal["tanh"] | Literal["leaky_relu"]
+    activation: Union[Literal["tanh"], Literal["leaky_relu"]]
     activation_fn: Callable
-    negative_slope: float | None
+    negative_slope: Union[float, None]
 
     def __init__(
         self,
         weight: Float[Array, " dim"],
         act_scale: Float[Array, " dim"],
         bias: Float[Array, " "],
-        negative_slope: float | None = None,
+        negative_slope: Union[float, None] = None,
     ):
         self.weight = weight
         self.bias = bias

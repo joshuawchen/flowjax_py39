@@ -9,17 +9,18 @@ For ``fit_to_key_based_loss``, the loss function signature must match
 """
 
 from collections.abc import Callable
+from typing import Union
 
 import equinox as eqx
 import jax.numpy as jnp
 import jax.random as jr
-import paramax
+import paramax_py39
 from jax import vmap
 from jax.lax import stop_gradient
 from jax.scipy.special import logsumexp
 from jaxtyping import Array, ArrayLike, Float, PRNGKeyArray
 
-from flowjax.distributions import AbstractDistribution
+from flowjax_py39.distributions import AbstractDistribution
 
 
 class MaximumLikelihoodLoss:
@@ -34,11 +35,11 @@ class MaximumLikelihoodLoss:
         params: AbstractDistribution,
         static: AbstractDistribution,
         x: Array,
-        condition: Array | None = None,
-        key: PRNGKeyArray | None = None,
+        condition: Union[Array, None] = None,
+        key: Union[PRNGKeyArray, None] = None,
     ) -> Float[Array, ""]:
         """Compute the loss. Key is ignored (for consistency of API)."""
-        dist = paramax.unwrap(eqx.combine(params, static))
+        dist = paramax_py39.unwrap(eqx.combine(params, static))
         return -dist.log_prob(x, condition).mean()
 
 
@@ -75,7 +76,7 @@ class ContrastiveLoss:
         params: AbstractDistribution,
         static: AbstractDistribution,
         x: Float[Array, "..."],
-        condition: Array | None,
+        condition: Union[Array, None],
         key: PRNGKeyArray,
     ) -> Float[Array, ""]:
         """Compute the loss."""
@@ -85,7 +86,7 @@ class ContrastiveLoss:
                 f"the size of x {x.shape}.",
             )
 
-        dist = paramax.unwrap(eqx.combine(params, static))
+        dist = paramax_py39.unwrap(eqx.combine(params, static))
 
         def single_x_loss(x_i, condition_i, contrastive_idxs):
             positive_logit = dist.log_prob(x_i, condition_i) - self.prior.log_prob(x_i)

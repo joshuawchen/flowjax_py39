@@ -1,6 +1,7 @@
 """Utility functions."""
 
 from collections.abc import Sequence
+from typing import Union
 
 import equinox as eqx
 import jax.numpy as jnp
@@ -9,7 +10,7 @@ from jax.tree_util import tree_leaves, tree_map
 from jaxtyping import Array, ArrayLike, PyTree
 
 
-def merge_cond_shapes(shapes: Sequence[tuple[int, ...] | None]):
+def merge_cond_shapes(shapes: Sequence[Union[tuple[int, ...], None]]):
     """Merges shapes (tuples of ints or None) used in bijections and distributions.
 
     Returns None if all shapes are None, otherwise checks none None shapes match, and
@@ -89,7 +90,7 @@ def get_ravelled_pytree_constructor(
 
 
 def arraylike_to_array(
-    arr: ArrayLike | None, err_name: str = "input", **kwargs
+    arr: ArrayLike, err_name: str = "input", **kwargs
 ) -> Array:
     """Check the input is arraylike and convert to a JAX Array with ``jnp.asarray``.
 
@@ -103,11 +104,11 @@ def arraylike_to_array(
         err_name: Name of the input in the error message. Defaults to "input".
         **kwargs: Keyword arguments passed to jnp.asarray.
     """
-    if not isinstance(arr, ArrayLike):
-        raise TypeError(
-            f"Expected {err_name} to be arraylike; got {type(arr).__name__}.",
-        )
-    return jnp.asarray(arr, **kwargs)
+    try:
+        return jnp.asarray(arr, **kwargs)
+    except Exception:
+        raise TypeError(f"Expected {err_name} to be array-like; got {type(arr).__name__}.")
+
 
 
 def _infer_axis_size_from_params(tree: PyTree, in_axes) -> int:

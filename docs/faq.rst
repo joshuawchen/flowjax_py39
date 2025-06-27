@@ -4,17 +4,17 @@ FAQ
 Freezing parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Often it is useful to not train particular parameters. The easiest way to achieve this
-is to use :func:`paramax.wrappers.non_trainable`. This will wrap the inexact array
-leaves with :class:`paramax.wrappers.NonTrainable`, which will apply ``stop_gradient``
+is to use :func:`paramax_py39.wrappers.non_trainable`. This will wrap the inexact array
+leaves with :class:`paramax_py39.wrappers.NonTrainable`, which will apply ``stop_gradient``
 when unwrapping the parameters. For commonly used distribution and bijection methods,
 unwrapping is applied automatically. For example
 
 .. doctest::
     
     >>> from flowjax.distributions import Normal
-    >>> import paramax
+    >>> import paramax_py39
     >>> dist = Normal()
-    >>> dist = paramax.non_trainable(dist)
+    >>> dist = paramax_py39.non_trainable(dist)
 
 To mark part of a tree as frozen, use ``non_trainable`` with e.g. 
 ``equinox.tree_at`` or ``jax.tree_map``.
@@ -23,7 +23,7 @@ To mark part of a tree as frozen, use ``non_trainable`` with e.g.
 Extracting parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To partition out the trainable parameters from other components of FlowJAX distributions
-or bijections we can use ``equinox``. As ``paramax.NonTrainable`` can be used to mark
+or bijections we can use ``equinox``. As ``paramax_py39.NonTrainable`` can be used to mark
 certain arrays as non-trainable, these should additionally be filtered into the static
 component.
 
@@ -33,7 +33,7 @@ component.
     >>> params, static = eqx.partition(
     ...     dist,
     ...     eqx.is_inexact_array,
-    ...     is_leaf=lambda leaf: isinstance(leaf, paramax.NonTrainable),
+    ...     is_leaf=lambda leaf: isinstance(leaf, paramax_py39.NonTrainable),
     ... )
 
 where ``params`` is a pytree of arrays containing the parameters.

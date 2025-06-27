@@ -9,14 +9,15 @@ maximum likelihood fitting of flows).
 
 import functools
 from abc import abstractmethod
+from typing import Union
 
 import equinox as eqx
 import jax.numpy as jnp
 from equinox import AbstractVar
 from jaxtyping import Array, ArrayLike
-from paramax import unwrap
+from paramax_py39 import unwrap
 
-from flowjax.utils import _get_ufunc_signature, arraylike_to_array
+from flowjax_py39.utils import _get_ufunc_signature, arraylike_to_array
 
 
 def _unwrap_check_and_cast(method):
@@ -26,7 +27,7 @@ def _unwrap_check_and_cast(method):
     def wrapper(
         bijection: AbstractBijection,
         x: ArrayLike,
-        condition: ArrayLike | None = None,
+        condition: Union[ArrayLike, None] = None,
     ):
         # TODO This can be simplified significantly if we use beartype
         def _check_condition(condition):
@@ -82,7 +83,7 @@ class AbstractBijection(eqx.Module):
     """
 
     shape: AbstractVar[tuple[int, ...]]
-    cond_shape: AbstractVar[tuple[int, ...] | None]
+    cond_shape: AbstractVar[Union[tuple[int, ...], None]]
 
     def __init_subclass__(cls) -> None:
         # We wrap the class methods with argument checking
@@ -97,7 +98,7 @@ class AbstractBijection(eqx.Module):
             ):
                 setattr(cls, meth, _unwrap_check_and_cast(cls.__dict__[meth]))
 
-    def transform(self, x: ArrayLike, condition: ArrayLike | None = None) -> Array:
+    def transform(self, x: ArrayLike, condition: Union[ArrayLike, None] = None) -> Array:
         """Apply the forward transformation.
 
         Args:
@@ -108,7 +109,7 @@ class AbstractBijection(eqx.Module):
         """
         return self.transform_and_log_det(x, condition)[0]  # Rely on JAX DCE
 
-    def inverse(self, y: ArrayLike, condition: ArrayLike | None = None) -> Array:
+    def inverse(self, y: ArrayLike, condition: Union[ArrayLike,  None] = None) -> Array:
         """Compute the inverse transformation.
 
         Args:
@@ -122,7 +123,7 @@ class AbstractBijection(eqx.Module):
     def transform_and_log_det(
         self,
         x: ArrayLike,
-        condition: ArrayLike | None = None,
+        condition: Union[ArrayLike,  None] = None,
     ) -> tuple[Array, Array]:
         """Apply transformation and compute the log absolute Jacobian determinant.
 
@@ -135,7 +136,7 @@ class AbstractBijection(eqx.Module):
     def inverse_and_log_det(
         self,
         y: ArrayLike,
-        condition: ArrayLike | None = None,
+        condition: Union[ArrayLike, None] = None,
     ) -> tuple[Array, Array]:
         """Inverse transformation and corresponding log absolute jacobian determinant.
 

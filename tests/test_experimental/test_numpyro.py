@@ -16,21 +16,21 @@ from numpyro.distributions.transforms import AffineTransform
 from numpyro.infer import MCMC, NUTS, SVI, Trace_ELBO
 from numpyro.optim import Adam
 
-from flowjax.bijections import AbstractBijection, AdditiveCondition, Affine, Invert
-from flowjax.distributions import (
+from flowjax_py39.bijections import AbstractBijection, AdditiveCondition, Affine, Invert
+from flowjax_py39.distributions import (
     LogNormal,
     Normal,
     StandardNormal,
     Transformed,
 )
-from flowjax.experimental.numpyro import (
+from flowjax_py39.experimental.numpyro import (
     _BijectionToNumpyro,
     _get_batch_shape,
     distribution_to_numpyro,
     register_params,
     sample,
 )
-from flowjax.flows import block_neural_autoregressive_flow, masked_autoregressive_flow
+from flowjax_py39.flows import block_neural_autoregressive_flow, masked_autoregressive_flow
 
 true_mean, true_std = jnp.ones(2), 2 * jnp.ones(2)
 

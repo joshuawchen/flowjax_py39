@@ -1,11 +1,11 @@
 """Power transform."""
 
-from typing import ClassVar
+from typing import ClassVar, Union
 
 import equinox as eqx
 import jax.numpy as jnp
 
-from flowjax.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.bijection import AbstractBijection
 
 
 class Power(AbstractBijection):
@@ -18,7 +18,7 @@ class Power(AbstractBijection):
         shape: The shape of the bijection.
     """
 
-    exponent: int | float
+    exponent: Union[int, float]
     shape: tuple[int, ...] = ()
     cond_shape: ClassVar[None] = None
 

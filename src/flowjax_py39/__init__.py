@@ -2,5 +2,5 @@
 
 from importlib.metadata import version
 
-__version__ = version("flowjax")
+__version__ = version("flowjax_py39")
 __all__ = []

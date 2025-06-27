@@ -4,16 +4,17 @@ Ref: https://arxiv.org/abs/1605.08803.
 """
 
 from collections.abc import Callable
+from typing import Union
 
 import equinox as eqx
 import jax.nn as jnn
 import jax.numpy as jnp
-import paramax
+import paramax_py39
 from jaxtyping import PRNGKeyArray
 
-from flowjax.bijections.bijection import AbstractBijection
-from flowjax.bijections.jax_transforms import Vmap
-from flowjax.utils import Array, get_ravelled_pytree_constructor
+from flowjax_py39.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.jax_transforms import Vmap
+from flowjax_py39.utils import Array, get_ravelled_pytree_constructor
 
 
 class Coupling(AbstractBijection):
@@ -33,7 +34,7 @@ class Coupling(AbstractBijection):
     """
 
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None
+    cond_shape: Union[tuple[int, ...], None]
     untransformed_dim: int
     dim: int
     transformer_constructor: Callable
@@ -46,7 +47,7 @@ class Coupling(AbstractBijection):
         transformer: AbstractBijection,
         untransformed_dim: int,
         dim: int,
-        cond_dim: int | None = None,
+        cond_dim: Union[int, None] = None,
         nn_width: int,
         nn_depth: int,
         nn_activation: Callable = jnn.relu,
@@ -59,7 +60,7 @@ class Coupling(AbstractBijection):
         constructor, num_params = get_ravelled_pytree_constructor(
             transformer,
             filter_spec=eqx.is_inexact_array,
-            is_leaf=lambda leaf: isinstance(leaf, paramax.NonTrainable),
+            is_leaf=lambda leaf: isinstance(leaf, paramax_py39.NonTrainable),
         )
 
         self.transformer_constructor = constructor

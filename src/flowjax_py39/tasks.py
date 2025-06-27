@@ -1,4 +1,5 @@
 """Example tasks."""
+from typing import Union
 
 import equinox as eqx
 import jax
@@ -6,8 +7,8 @@ import jax.numpy as jnp
 import jax.random as jr
 from jaxtyping import ArrayLike, PRNGKeyArray
 
-from flowjax.distributions import Uniform
-from flowjax.utils import arraylike_to_array
+from flowjax_py39.distributions import Uniform
+from flowjax_py39.utils import arraylike_to_array
 
 
 def two_moons(key: PRNGKeyArray, n_samples, noise_std=0.2):
@@ -32,7 +33,7 @@ class GaussianMixtureSimulator:
         x | \theta \sim 0.5 \cdot N(\theta,\ I_2) + 0.5 \cdot N(\theta,\ 0.1^2\odot I_2)
     """
 
-    def __init__(self, dim: int = 2, prior_bound: float | int = 10.0) -> None:
+    def __init__(self, dim: int = 2, prior_bound: Union[float, int] = 10.0) -> None:
         self.dim = dim
         self.prior_bound = prior_bound
         self.prior = Uniform(-jnp.full(dim, prior_bound), jnp.full(dim, prior_bound))

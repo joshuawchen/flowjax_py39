@@ -7,14 +7,14 @@ specialised for autoregressive increasing functions.
 """
 
 from collections.abc import Callable
-from typing import Any
+from typing import Any, Union
 
 import equinox as eqx
 import jax.numpy as jnp
 from jax import lax
 from jaxtyping import Array, ArrayLike, Bool, Float, Int, PyTree, Real, ScalarLike
 
-from flowjax.utils import arraylike_to_array
+from flowjax_py39.utils import arraylike_to_array
 
 
 class WhileResult(eqx.Module):
@@ -109,7 +109,7 @@ def bisect_check_expand_search(
     atol: float = 1e-5,
     max_steps: int = 5000,
     throw: bool = True,
-    max_width: float | int | None = None,
+    max_width: Union[float, int, None] = None,
 ) -> tuple[Array, WhileResult]:
     """Bisect check expand search for an increasing autoregressive function.
 
@@ -276,7 +276,7 @@ def _adapt_interval_to_include_root(
     lower: Real[Array, ""],
     upper: Real[Array, ""],
     *,
-    expand_factor: float | int = 2,
+    expand_factor: Union[float, int] = 2,
     max_steps: int = 1000,
     throw: bool = True,
 ):

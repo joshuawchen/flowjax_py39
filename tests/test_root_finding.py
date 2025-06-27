@@ -4,7 +4,7 @@ import jax
 import jax.numpy as jnp
 import pytest
 
-from flowjax.root_finding import (
+from flowjax_py39.root_finding import (
     WhileResult,
     _adapt_interval_to_include_root,
     bisect_check_expand_search,

@@ -3,7 +3,7 @@ import jax.numpy as jnp
 import jax.random as jr
 import pytest
 
-from flowjax.train.train_utils import count_fruitless, get_batches, train_val_split
+from flowjax_py39.train.train_utils import count_fruitless, get_batches, train_val_split
 
 
 def test_train_val_split():
@@ -18,11 +18,11 @@ def test_train_val_split():
     # Check shapes
     assert all(
         train_arr.shape == expected
-        for train_arr, expected in zip(train, expected_train, strict=True)
+        for train_arr, expected in zip(train, expected_train)
     )
     assert all(
         val_arr.shape == expected
-        for val_arr, expected in zip(val, expected_val, strict=True)
+        for val_arr, expected in zip(val, expected_val)
     )
 
     arrays = [jnp.ones((5, 2)), jnp.ones((3, 5))]

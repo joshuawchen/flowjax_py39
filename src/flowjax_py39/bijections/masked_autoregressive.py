@@ -2,18 +2,19 @@
 
 from collections.abc import Callable
 from functools import partial
+from typing import Union
 
 import equinox as eqx
 import jax
 import jax.nn as jnn
 import jax.numpy as jnp
-import paramax
+import paramax_py39
 from jaxtyping import Array, Int, PRNGKeyArray
 
-from flowjax.bijections.bijection import AbstractBijection
-from flowjax.bijections.jax_transforms import Vmap
-from flowjax.masks import rank_based_mask
-from flowjax.utils import get_ravelled_pytree_constructor
+from flowjax_py39.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.jax_transforms import Vmap
+from flowjax_py39.masks import rank_based_mask
+from flowjax_py39.utils import get_ravelled_pytree_constructor
 
 
 class MaskedAutoregressive(AbstractBijection):
@@ -38,7 +39,7 @@ class MaskedAutoregressive(AbstractBijection):
     """
 
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None
+    cond_shape: Union[tuple[int, ...], None]
     transformer_constructor: Callable
     masked_autoregressive_mlp: eqx.nn.MLP
 
@@ -48,7 +49,7 @@ class MaskedAutoregressive(AbstractBijection):
         *,
         transformer: AbstractBijection,
         dim: int,
-        cond_dim: int | None = None,
+        cond_dim: Union[int, None] = None,
         nn_width: int,
         nn_depth: int,
         nn_activation: Callable = jnn.relu,
@@ -61,7 +62,7 @@ class MaskedAutoregressive(AbstractBijection):
         constructor, num_params = get_ravelled_pytree_constructor(
             transformer,
             filter_spec=eqx.is_inexact_array,
-            is_leaf=lambda leaf: isinstance(leaf, paramax.NonTrainable),
+            is_leaf=lambda leaf: isinstance(leaf, paramax_py39.NonTrainable),
         )
 
         if cond_dim is None:
@@ -129,8 +130,8 @@ def masked_autoregressive_mlp(
 ) -> eqx.nn.MLP:
     """Returns an equinox multilayer perceptron, with autoregressive masks.
 
-    The weight matrices are wrapped using :class:`~paramax.wrappers.Parameterize`, which
-    will apply the masking when :class:`~paramax.wrappers.unwrap` is called on the MLP.
+    The weight matrices are wrapped using :class:`~paramax_py39.wrappers.Parameterize`, which
+    will apply the masking when :class:`~paramax_py39.wrappers.unwrap` is called on the MLP.
     For details of how the masks are formed, see https://arxiv.org/pdf/1502.03509.pdf.
 
     Args:
@@ -156,7 +157,7 @@ def masked_autoregressive_mlp(
         masked_linear = eqx.tree_at(
             lambda linear: linear.weight,
             linear,
-            paramax.Parameterize(jnp.where, mask, linear.weight, 0),
+            paramax_py39.Parameterize(jnp.where, mask, linear.weight, 0),
         )
         masked_layers.append(masked_linear)
 

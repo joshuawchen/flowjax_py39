@@ -1,15 +1,16 @@
 """Bijections that wrap JAX function transforms (scan and vmap)."""
 
 from collections.abc import Callable
+from typing import Union
 
 import equinox as eqx
 import jax.numpy as jnp
 from jax.lax import scan
 from jax.tree_util import tree_leaves, tree_map
 from jaxtyping import PyTree
-from paramax import contains_unwrappables, unwrap
+from paramax_py39 import contains_unwrappables, unwrap 
 
-from flowjax.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.bijection import AbstractBijection
 
 
 class Scan(AbstractBijection):
@@ -128,10 +129,10 @@ class Vmap(AbstractBijection):
         parameter? We could achieve this as follows.
 
             >>> from jax.tree_util import tree_map
-            >>> import paramax
+            >>> import paramax_py39
             >>> bijection = Affine(jnp.zeros(()), jnp.ones(()))
             >>> bijection = eqx.tree_at(lambda bij: bij.loc, bijection, jnp.arange(3))
-            >>> in_axes = tree_map(lambda _: None, paramax.unwrap(bijection))
+            >>> in_axes = tree_map(lambda _: None, paramax_py39.unwrap(bijection))
             >>> in_axes = eqx.tree_at(
             ...     lambda bij: bij.loc, in_axes, 0, is_leaf=lambda x: x is None
             ...     )
@@ -140,7 +141,7 @@ class Vmap(AbstractBijection):
             (3,)
             >>> bijection.bijection.loc.shape
             (3,)
-            >>> paramax.unwrap(bijection.bijection.scale).shape
+            >>> paramax_py39.unwrap(bijection.bijection.scale).shape
             ()
             >>> x = jnp.ones(3)
             >>> bijection.transform(x)
@@ -151,15 +152,15 @@ class Vmap(AbstractBijection):
     bijection: AbstractBijection
     in_axes: tuple
     axis_size: int
-    cond_shape: tuple[int, ...] | None
+    cond_shape: Union[tuple[int, ...], None]
 
     def __init__(
         self,
         bijection: AbstractBijection,
         *,
-        in_axes: PyTree | None | int | Callable = None,
-        axis_size: int | None = None,
-        in_axes_condition: int | None = None,
+        in_axes: Union[PyTree, None, int, Callable] = None,
+        axis_size: Union[int, None] = None,
+        in_axes_condition: Union[int, None] = None,
     ):
         if in_axes is not None and axis_size is not None:
             raise ValueError("Cannot specify both in_axes and axis_size.")

@@ -2,17 +2,17 @@
 
 from collections.abc import Callable
 from functools import partial
-from typing import ClassVar
+from typing import ClassVar, Union
 
 import jax.numpy as jnp
 from jax.nn import softplus
 from jax.scipy.linalg import solve_triangular
 from jaxtyping import Array, ArrayLike, Shaped
-from paramax import AbstractUnwrappable, Parameterize, unwrap
-from paramax.utils import inv_softplus
+from paramax_py39 import AbstractUnwrappable, Parameterize, unwrap
+from paramax_py39.utils import inv_softplus
 
-from flowjax.bijections.bijection import AbstractBijection
-from flowjax.utils import arraylike_to_array
+from flowjax_py39.bijections.bijection import AbstractBijection
+from flowjax_py39.utils import arraylike_to_array
 
 
 class Affine(AbstractBijection):
@@ -31,7 +31,7 @@ class Affine(AbstractBijection):
     shape: tuple[int, ...]
     cond_shape: ClassVar[None] = None
     loc: Array
-    scale: Array | AbstractUnwrappable[Array]
+    scale: Union[Array, AbstractUnwrappable[Array]]
 
     def __init__(
         self,
@@ -82,7 +82,7 @@ class Scale(AbstractBijection):
 
     shape: tuple[int, ...]
     cond_shape: ClassVar[None] = None
-    scale: Array | AbstractUnwrappable[Array]
+    scale: Union[Array, AbstractUnwrappable[Array]]
 
     def __init__(
         self,
@@ -119,7 +119,7 @@ class TriangularAffine(AbstractBijection):
     shape: tuple[int, ...]
     cond_shape: ClassVar[None] = None
     loc: Array
-    triangular: Array | AbstractUnwrappable[Array]
+    triangular: Union[Array, AbstractUnwrappable[Array]]
     lower: bool
 
     def __init__(

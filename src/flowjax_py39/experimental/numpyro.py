@@ -4,17 +4,17 @@ Note these utilities require `numpyro <https://github.com/pyro-ppl/numpyro>`_ to
 installed.
 """
 
-from typing import Any
+from typing import Any, Union
 
 import equinox as eqx
 import jax
 import jax.random as jr
-import paramax
+import paramax_py39
 from jaxtyping import Array, ArrayLike
 
-from flowjax.bijections import AbstractBijection
-from flowjax.distributions import AbstractDistribution, AbstractTransformed
-from flowjax.utils import arraylike_to_array
+from flowjax_py39.bijections import AbstractBijection
+from flowjax_py39.distributions import AbstractDistribution, AbstractTransformed
+from flowjax_py39.utils import arraylike_to_array
 
 try:
     import numpyro
@@ -34,7 +34,7 @@ from numpyro.distributions.constraints import (
 from numpyro.distributions.transforms import IndependentTransform, biject_to
 from numpyro.distributions.util import sum_rightmost
 
-from flowjax.bijections import Invert
+from flowjax_py39.bijections import Invert
 
 
 class _BetterTransformedDistribution(TransformedDistribution):
@@ -129,7 +129,7 @@ def register_params(
     params, static = eqx.partition(
         model,
         eqx.is_inexact_array,
-        is_leaf=lambda leaf: isinstance(leaf, paramax.NonTrainable),
+        is_leaf=lambda leaf: isinstance(leaf, paramax_py39.NonTrainable),
     )
     if callable(params):
         # Wrap to avoid special handling of callables by numpyro. Numpyro expects a
@@ -138,12 +138,12 @@ def register_params(
         params = numpyro.param(name, lambda _: params)
     else:
         params = numpyro.param(name, params)
-    return paramax.unwrap(eqx.combine(params, static))
+    return paramax_py39.unwrap(eqx.combine(params, static))
 
 
 def distribution_to_numpyro(
     dist: AbstractDistribution,
-    condition: ArrayLike | None = None,
+    condition: Union[ArrayLike, None] = None,
 ):
     """Convert a flowjax distribution to a numpyro distribution.
 
@@ -166,12 +166,12 @@ class _DistributionToNumpyro(numpyro.distributions.Distribution):
     """
 
     dist: AbstractDistribution
-    _condition: Array | None
+    _condition: Union[Array, None]
 
     def __init__(
         self,
         dist: AbstractDistribution,
-        condition: ArrayLike | None = None,
+        condition: Union[ArrayLike, None] = None,
     ):
         self.dist = dist
 
@@ -232,7 +232,7 @@ class _BijectionToNumpyro(numpyro.distributions.transforms.Transform):
     def __init__(
         self,
         bijection: AbstractBijection,
-        condition: Array | None = None,
+        condition: Union[Array, None] = None,
         domain=None,
         codomain=None,
     ):

@@ -1,9 +1,9 @@
 import jax.random as jr
 import pytest
 
-from flowjax.bijections import Affine, RationalQuadraticSpline
-from flowjax.distributions import StandardNormal
-from flowjax.flows import (
+from flowjax_py39.bijections import Affine, RationalQuadraticSpline
+from flowjax_py39.distributions import StandardNormal
+from flowjax_py39.flows import (
     block_neural_autoregressive_flow,
     coupling_flow,
     masked_autoregressive_flow,

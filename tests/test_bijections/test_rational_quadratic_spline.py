@@ -5,8 +5,8 @@ import pytest
 from jax import vmap
 from jax.tree_util import tree_map
 
-from flowjax.bijections import RationalQuadraticSpline
-from flowjax.bijections.rational_quadratic_spline import _real_to_increasing_on_interval
+from flowjax_py39.bijections import RationalQuadraticSpline
+from flowjax_py39.bijections.rational_quadratic_spline import _real_to_increasing_on_interval
 
 
 @pytest.mark.parametrize("interval", [3, (-4, 5)])

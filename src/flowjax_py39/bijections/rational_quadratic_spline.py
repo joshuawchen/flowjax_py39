@@ -1,20 +1,20 @@
 """Rational quadratic spline bijections (https://arxiv.org/abs/1906.04032)."""
 
 from functools import partial
-from typing import ClassVar
+from typing import ClassVar, Union
 
 import jax
 import jax.numpy as jnp
 from jaxtyping import Array, Float
-from paramax import AbstractUnwrappable, Parameterize
-from paramax.utils import inv_softplus
+from paramax_py39 import AbstractUnwrappable, Parameterize
+from paramax_py39.utils import inv_softplus
 
-from flowjax.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.bijection import AbstractBijection
 
 
 def _real_to_increasing_on_interval(
     arr: Float[Array, " dim"],
-    interval: tuple[int | float, int | float],
+    interval: tuple[Union[int, float], Union[int, float]],
     softmax_adjust: float = 1e-2,
     *,
     pad_with_ends: bool = True,
@@ -60,12 +60,12 @@ class RationalQuadraticSpline(AbstractBijection):
     """
 
     knots: int
-    interval: tuple[int | float, int | float]
-    softmax_adjust: float | int
+    interval: tuple[Union[int, float], Union[int, float]]
+    softmax_adjust: Union[float, int]
     min_derivative: float
-    x_pos: Array | AbstractUnwrappable[Array]
-    y_pos: Array | AbstractUnwrappable[Array]
-    derivatives: Array | AbstractUnwrappable[Array]
+    x_pos: Union[Array, AbstractUnwrappable[Array]]
+    y_pos: Union[Array, AbstractUnwrappable[Array]]
+    derivatives: Union[Array, AbstractUnwrappable[Array]]
     shape: ClassVar[tuple] = ()
     cond_shape: ClassVar[None] = None
 
@@ -73,9 +73,9 @@ class RationalQuadraticSpline(AbstractBijection):
         self,
         *,
         knots: int,
-        interval: float | int | tuple[int | float, int | float],
+        interval: Union[float, int, tuple[Union[int, float], Union[int, float]]],
         min_derivative: float = 1e-3,
-        softmax_adjust: float | int = 1e-2,
+        softmax_adjust: Union[float, int] = 1e-2,
     ):
         self.knots = knots
         interval = interval if isinstance(interval, tuple) else (-interval, interval)

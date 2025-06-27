@@ -4,10 +4,10 @@ import jax.random as jr
 import pytest
 from jax import random
 
-from flowjax.bijections import Affine
-from flowjax.distributions import Normal, StandardNormal, Transformed
-from flowjax.train.loops import fit_to_data, fit_to_key_based_loss
-from flowjax.train.losses import ElboLoss
+from flowjax_py39.bijections import Affine
+from flowjax_py39.distributions import Normal, StandardNormal, Transformed
+from flowjax_py39.train.loops import fit_to_data, fit_to_key_based_loss
+from flowjax_py39.train.losses import ElboLoss
 
 
 def test_data_fit():

@@ -64,7 +64,7 @@ def train_val_split(
         raise ValueError("val_prop should be between 0 and 1.")
 
     num_samples = arrays[0].shape[0]
-    if not all(isinstance(a, Shaped[Array, " dim ..."]) for a in arrays):
+    if any(a.shape[0] != num_samples for a in arrays):
         raise ValueError("Array dimensions must match along axis 0.")
 
     n_train = num_samples - round(val_prop * num_samples)

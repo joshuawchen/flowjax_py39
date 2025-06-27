@@ -1,13 +1,13 @@
 """Chain bijection which allows sequential application of arbitrary bijections."""
 
 from collections.abc import Sequence
-
+from typing import Union
 import jax.numpy as jnp
 from jax import Array
-from paramax import AbstractUnwrappable, unwrap
+from paramax_py39 import AbstractUnwrappable, unwrap
 
-from flowjax.bijections.bijection import AbstractBijection
-from flowjax.utils import check_shapes_match, merge_cond_shapes
+from flowjax_py39.bijections.bijection import AbstractBijection
+from flowjax_py39.utils import check_shapes_match, merge_cond_shapes
 
 
 class Chain(AbstractBijection):
@@ -23,13 +23,13 @@ class Chain(AbstractBijection):
     """
 
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None
-    bijections: tuple[AbstractBijection | AbstractUnwrappable[AbstractBijection], ...]
+    cond_shape: Union[tuple[int, ...], None]
+    bijections: tuple[Union[AbstractBijection, AbstractUnwrappable[AbstractBijection]], ...]
 
     def __init__(
         self,
         bijections: Sequence[
-            AbstractBijection | AbstractUnwrappable[AbstractBijection]
+            Union[AbstractBijection, AbstractUnwrappable[AbstractBijection]]
         ],
     ):
         unwrapped = unwrap(bijections)
@@ -39,7 +39,7 @@ class Chain(AbstractBijection):
         self.bijections = tuple(bijections)
 
     def transform_and_log_det(
-        self, x: Array, condition: Array | None = None
+        self, x: Array, condition: Union[Array, None] = None
     ) -> tuple[Array, Array]:
         log_abs_det_jac = jnp.zeros(())
         for bijection in self.bijections:
@@ -48,7 +48,7 @@ class Chain(AbstractBijection):
         return x, log_abs_det_jac
 
     def inverse_and_log_det(
-        self, y: Array, condition: Array | None = None
+        self, y: Array, condition: Union[Array, None] = None
     ) -> tuple[Array, Array]:
         log_abs_det_jac = jnp.zeros(())
         for bijection in reversed(self.bijections):
@@ -56,7 +56,7 @@ class Chain(AbstractBijection):
             log_abs_det_jac += log_abs_det_jac_i.sum()
         return y, log_abs_det_jac
 
-    def __getitem__(self, i: int | slice) -> AbstractBijection:
+    def __getitem__(self, i: Union[int, slice]) -> AbstractBijection:
         if isinstance(i, int):
             return self.bijections[i]
         if isinstance(i, slice):

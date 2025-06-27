@@ -1,7 +1,7 @@
 import jax.numpy as jnp
 import pytest
 
-from flowjax.utils import _get_ufunc_signature, merge_cond_shapes
+from flowjax_py39.utils import _get_ufunc_signature, merge_cond_shapes
 
 test_cases = [
     # arrays, expected_shape

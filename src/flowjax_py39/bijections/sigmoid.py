@@ -6,7 +6,7 @@ import jax.numpy as jnp
 from jax import nn
 from jax.scipy.special import logit
 
-from flowjax.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.bijection import AbstractBijection
 
 
 class Sigmoid(AbstractBijection):

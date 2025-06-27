@@ -3,8 +3,8 @@ import jax.numpy as jnp
 import jax.random as jr
 import pytest
 
-from flowjax.distributions import Normal
-from flowjax.train.losses import ElboLoss, _get_contrastive_idxs
+from flowjax_py39.distributions import Normal
+from flowjax_py39.train.losses import ElboLoss, _get_contrastive_idxs
 
 
 def test_get_contrastive_idxs():

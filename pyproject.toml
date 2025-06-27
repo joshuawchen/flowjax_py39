@@ -1,32 +1,29 @@
+[build-system]
+requires = ["uv_build>=0.5.0"]
+build-backend = "uv_build"
+
 [project]
-authors = [{ name = "Daniel Ward", email = "danielward27@outlook.com" }]
-classifiers = [
-  "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
-  "Natural Language :: English",
-  "Programming Language :: Python :: 3",
-  "Topic :: Scientific/Engineering :: Artificial Intelligence",
-  "Topic :: Scientific/Engineering :: Information Analysis",
-  "Topic :: Scientific/Engineering :: Mathematics",
-]
+authors = [{ name = "Joshua Chen", email = "joshuawchen@icloud.com" }]
+
 dependencies = [
   "jax>=0.4.16",
-  "equinox>=0.10",
+  "equinox<=0.11.10",
   "jaxtyping",
+  "paramax_py39",
   "tqdm",
   "optax",
-  "paramax",
 ]
-description = "Easy to use distributions, bijections and normalizing flows in JAX."
+description = "Easy to use distributions, bijections and normalizing flows in JAX, forked for Python 3.9 compatability"
+
 keywords = ["jax", "neural-networks", "equinox"]
 license = { file = "LICENSE" }
-name = "flowjax"
+name = "flowjax_py39"
 readme = "README.md"
-requires-python = ">=3.10"
-version = "17.1.2"
+requires-python = ">=3.9"
+version = "17.1.2.1"
 
 [project.urls]
-repository = "https://github.com/danielward27/flowjax"
+repository = "https://github.com/joshuawchen/flowjax_py39" 
 documentation = "https://danielward27.github.io/flowjax/index.html"
 
 [project.optional-dependencies]
@@ -42,10 +39,6 @@ dev = [
   "ipython",
   "numpyro",
 ]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
@@ -65,3 +58,6 @@ convention = "google"
 "tests/*" = ["D"]
 "*.ipynb" = ["D"]
 "__init__.py" = ["D"]
+
+[tool.uv_build]
+src_dir = "src"

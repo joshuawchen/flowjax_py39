@@ -5,8 +5,8 @@ import jax.numpy as jnp
 import pytest
 from equinox import EquinoxRuntimeError
 
-from flowjax.bijections import Affine, Indexed, NumericalInverse, Permute
-from flowjax.root_finding import bisection_search, root_finder_to_inverter
+from flowjax_py39.bijections import Affine, Indexed, NumericalInverse, Permute
+from flowjax_py39.root_finding import bisection_search, root_finder_to_inverter
 
 test_cases = {
     # name: idx, expected

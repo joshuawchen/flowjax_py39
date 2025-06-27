@@ -5,6 +5,7 @@ All these functions return a :class:`~flowjax.distributions.Transformed` distrib
 
 from collections.abc import Callable
 from functools import partial
+from typing import Union
 
 import equinox as eqx
 import jax.nn as jnn
@@ -14,10 +15,10 @@ from equinox.nn import Linear
 from jax.nn import softplus
 from jax.nn.initializers import glorot_uniform
 from jaxtyping import Array, PRNGKeyArray
-from paramax import Parameterize, WeightNormalization
-from paramax.utils import inv_softplus
+from paramax_py39 import Parameterize, WeightNormalization
+from paramax_py39.utils import inv_softplus
 
-from flowjax.bijections import (
+from flowjax_py39.bijections import (
     AbstractBijection,
     AdditiveCondition,
     Affine,
@@ -37,8 +38,8 @@ from flowjax.bijections import (
     TriangularAffine,
     Vmap,
 )
-from flowjax.distributions import AbstractDistribution, Transformed
-from flowjax.root_finding import (
+from flowjax_py39.distributions import AbstractDistribution, Transformed
+from flowjax_py39.root_finding import (
     bisect_check_expand_search,
     root_finder_to_inverter,
 )
@@ -53,8 +54,8 @@ def coupling_flow(
     key: PRNGKeyArray,
     *,
     base_dist: AbstractDistribution,
-    transformer: AbstractBijection | None = None,
-    cond_dim: int | None = None,
+    transformer: Union[ AbstractBijection, None] = None,
+    cond_dim: Union[int, None] = None,
     flow_layers: int = 8,
     nn_width: int = 50,
     nn_depth: int = 1,
@@ -106,8 +107,8 @@ def masked_autoregressive_flow(
     key: PRNGKeyArray,
     *,
     base_dist: AbstractDistribution,
-    transformer: AbstractBijection | None = None,
-    cond_dim: int | None = None,
+    transformer: Union[ AbstractBijection, None] = None,
+    cond_dim: Union[int, None] = None,
     flow_layers: int = 8,
     nn_width: int = 50,
     nn_depth: int = 1,
@@ -161,13 +162,13 @@ def block_neural_autoregressive_flow(
     key: PRNGKeyArray,
     *,
     base_dist: AbstractDistribution,
-    cond_dim: int | None = None,
+    cond_dim: Union[int, None] = None,
     nn_depth: int = 1,
     nn_block_dim: int = 8,
     flow_layers: int = 1,
     invert: bool = True,
-    activation: AbstractBijection | Callable | None = None,
-    inverter: Callable[[AbstractBijection, Array, Array | None], Array] | None = None,
+    activation: Union[AbstractBijection, Callable, None] = None,
+    inverter: Union[Callable[[AbstractBijection, Array, Union[Array, None]], Array], None] = None,
 ) -> Transformed:
     """Block neural autoregressive flow (BNAF) (https://arxiv.org/abs/1904.04676).
 
@@ -235,10 +236,10 @@ def planar_flow(
     key: PRNGKeyArray,
     *,
     base_dist: AbstractDistribution,
-    cond_dim: int | None = None,
+    cond_dim: Union[int, None] = None,
     flow_layers: int = 8,
     invert: bool = True,
-    negative_slope: float | None = None,
+    negative_slope: Union[float, None] = None,
     **mlp_kwargs,
 ) -> Transformed:
     """Planar flow as introduced in https://arxiv.org/pdf/1505.05770.pdf.
@@ -282,12 +283,12 @@ def triangular_spline_flow(
     key: PRNGKeyArray,
     *,
     base_dist: AbstractDistribution,
-    cond_dim: int | None = None,
+    cond_dim: Union[int, None] = None,
     flow_layers: int = 8,
     knots: int = 8,
-    tanh_max_val: float | int = 3.0,
+    tanh_max_val: Union[float, int] = 3.0,
     invert: bool = True,
-    init: Callable | None = None,
+    init: Union[Callable, None] = None,
 ) -> Transformed:
     """Triangular spline flow.
 

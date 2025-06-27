@@ -5,7 +5,7 @@ from typing import ClassVar
 import jax.numpy as jnp
 from jax.nn import softplus
 
-from flowjax.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.bijection import AbstractBijection
 
 
 class SoftPlus(AbstractBijection):

@@ -1,6 +1,6 @@
 import jax.numpy as jnp
 
-from flowjax.masks import block_diag_mask, block_tril_mask, rank_based_mask
+from flowjax_py39.masks import block_diag_mask, block_tril_mask, rank_based_mask
 
 
 def test_rank_based_mask():

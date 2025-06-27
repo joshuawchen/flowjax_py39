@@ -2,7 +2,7 @@
 
 from collections.abc import Callable
 from math import prod
-from typing import ClassVar
+from typing import ClassVar, Union
 
 import equinox as eqx
 import jax
@@ -11,11 +11,11 @@ import jax.random as jr
 from jax import random
 from jax.nn import softplus
 from jaxtyping import PRNGKeyArray
-from paramax import Parameterize, WeightNormalization
+from paramax_py39 import Parameterize, WeightNormalization
 
-from flowjax import masks
-from flowjax.bijections.bijection import AbstractBijection
-from flowjax.bijections.tanh import _tanh_log_grad
+from flowjax_py39 import masks
+from flowjax_py39.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.tanh import _tanh_log_grad
 
 
 class _CallableToBijection(AbstractBijection):
@@ -78,10 +78,10 @@ class BlockAutoregressiveNetwork(AbstractBijection):
     """
 
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None
+    cond_shape: Union[tuple[int, ...], None]
     depth: int
     layers: list
-    cond_linear: eqx.nn.Linear | None
+    cond_linear: Union[eqx.nn.Linear, None]
     block_dim: int
     activation: AbstractBijection
 
@@ -90,10 +90,10 @@ class BlockAutoregressiveNetwork(AbstractBijection):
         key: PRNGKeyArray,
         *,
         dim: int,
-        cond_dim: int | None = None,
+        cond_dim: Union[int, None] = None,
         depth: int,
         block_dim: int,
-        activation: AbstractBijection | Callable | None = None,
+        activation: Union[AbstractBijection, Callable, None] = None,
     ):
         key, subkey = jr.split(key)
         activation = _LeakyTanh(0.01) if activation is None else activation
@@ -122,7 +122,7 @@ class BlockAutoregressiveNetwork(AbstractBijection):
                 (1, block_dim),
             ]
 
-            for layer_key, block_shape in zip(keys, block_shapes, strict=True):
+            for layer_key, block_shape in zip(keys, block_shapes):
                 layers_and_log_jac_fns.append(
                     block_autoregressive_linear(
                         layer_key,

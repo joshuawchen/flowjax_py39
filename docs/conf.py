@@ -29,7 +29,7 @@ extensions = [
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
     "jax": ("https://jax.readthedocs.io/en/latest/", None),
-    "paramax": ("https://danielward27.github.io/paramax/", None),
+    "paramax_py39": ("https://danielward27.github.io/paramax_py39/", None),
 }
 
 templates_path = ["_templates"]

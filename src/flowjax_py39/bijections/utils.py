@@ -2,16 +2,16 @@
 
 from collections.abc import Callable
 from math import prod
-from typing import ClassVar
+from typing import ClassVar, Union
 
 import equinox as eqx
 import jax.numpy as jnp
 import numpy as np
 from jaxtyping import Array, Int
 
-from flowjax.bijections.bijection import AbstractBijection
-from flowjax.bijections.chain import Chain
-from flowjax.utils import arraylike_to_array, check_shapes_match, merge_cond_shapes
+from flowjax_py39.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.chain import Chain
+from flowjax_py39.utils import arraylike_to_array, check_shapes_match, merge_cond_shapes
 
 
 class Invert(AbstractBijection):
@@ -59,7 +59,7 @@ class Permute(AbstractBijection):
     permutation: tuple[Array, ...]
     inverse_permutation: tuple[Array, ...]
 
-    def __init__(self, permutation: Int[Array | np.ndarray, "..."]):
+    def __init__(self, permutation: Int[Union[Array, np.ndarray], "..."]):
         permutation = arraylike_to_array(permutation, dtype=int)
         permutation = eqx.error_if(
             permutation,
@@ -97,12 +97,12 @@ class Flip(AbstractBijection):
     cond_shape: ClassVar[None] = None
 
     def transform_and_log_det(
-        self, x: Array, condition: Array | None = None
+        self, x: Array, condition: Union[Array, None] = None
     ) -> tuple[Array, Array]:
         return jnp.flip(x), jnp.zeros(())
 
     def inverse_and_log_det(
-        self, y: Array, condition: Array | None = None
+        self, y: Array, condition: Union[Array, None] = None
     ) -> tuple[Array, Array]:
         return jnp.flip(y), jnp.zeros(())
 
@@ -118,7 +118,7 @@ class Indexed(AbstractBijection):
     """
 
     bijection: AbstractBijection
-    idxs: int | slice | Array | tuple
+    idxs: Union[int, slice, Array, tuple]
     shape: tuple[int, ...]
 
     def __check_init__(self):
@@ -230,13 +230,13 @@ class Reshape(AbstractBijection):
 
     bijection: AbstractBijection
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None = None
+    cond_shape: Union[tuple[int, ...], None] = None
 
     def __init__(
         self,
         bijection: AbstractBijection,
-        shape: tuple[int, ...] | None = None,
-        cond_shape: tuple[int, ...] | None = None,
+        shape: Union[tuple[int, ...], None] = None,
+        cond_shape: Union[tuple[int, ...], None] = None,
     ):
         self.bijection = bijection
         self.shape = shape if shape is not None else bijection.shape
@@ -284,14 +284,14 @@ class NumericalInverse(AbstractBijection):
     """
 
     bijection: AbstractBijection
-    inverter: Callable[[AbstractBijection, Array, Array | None], Array]
+    inverter: Callable[[AbstractBijection, Array, Union[Array, None]], Array]
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None
+    cond_shape: Union[tuple[int, ...], None]
 
     def __init__(
         self,
         bijection: AbstractBijection,
-        inverter: Callable[[AbstractBijection, Array, Array | None], Array],
+        inverter: Callable[[AbstractBijection, Array, Union[Array, None]], Array],
     ):
         @eqx.filter_custom_jvp
         def nondiff_inverter(bijection, y, condition):
@@ -341,7 +341,7 @@ class Sandwich(AbstractBijection):
     """
 
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None
+    cond_shape: Union[tuple[int, ...], None]
     inner: AbstractBijection
     outer: AbstractBijection
 

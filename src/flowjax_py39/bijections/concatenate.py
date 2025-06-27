@@ -2,12 +2,13 @@
 
 from collections.abc import Sequence
 from itertools import accumulate
+from typing import Union
 
 import jax.numpy as jnp
 from jaxtyping import Array
 
-from flowjax.bijections.bijection import AbstractBijection
-from flowjax.utils import check_shapes_match, merge_cond_shapes
+from flowjax_py39.bijections.bijection import AbstractBijection
+from flowjax_py39.utils import check_shapes_match, merge_cond_shapes
 
 
 class Concatenate(AbstractBijection):
@@ -30,7 +31,7 @@ class Concatenate(AbstractBijection):
     """
 
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None
+    cond_shape: Union[tuple[int, ...], None]
     split_idxs: tuple[int, ...]
     bijections: Sequence[AbstractBijection]
     axis: int
@@ -53,10 +54,10 @@ class Concatenate(AbstractBijection):
 
         ys_log_dets = [
             b.transform_and_log_det(x, condition)
-            for b, x in zip(self.bijections, x_parts, strict=True)
+            for b, x in zip(self.bijections, x_parts)
         ]
 
-        y_parts, log_dets = zip(*ys_log_dets, strict=True)
+        y_parts, log_dets = zip(*ys_log_dets)
         return jnp.concatenate(y_parts, self.axis), sum(log_dets)
 
     def inverse_and_log_det(self, y, condition=None):
@@ -64,10 +65,10 @@ class Concatenate(AbstractBijection):
 
         xs_log_dets = [
             b.inverse_and_log_det(y, condition)
-            for b, y in zip(self.bijections, y_parts, strict=True)
+            for b, y in zip(self.bijections, y_parts)
         ]
 
-        x_parts, log_dets = zip(*xs_log_dets, strict=True)
+        x_parts, log_dets = zip(*xs_log_dets)
         return jnp.concatenate(x_parts, self.axis), sum(log_dets)
 
     def _argcheck_shapes(self, shapes: Sequence[tuple[int, ...]]):
@@ -100,7 +101,7 @@ class Stack(AbstractBijection):
     """
 
     shape: tuple[int, ...]
-    cond_shape: tuple[int, ...] | None
+    cond_shape: Union[tuple[int, ...], None]
     bijections: Sequence[AbstractBijection]
     axis: int
 
@@ -118,19 +119,19 @@ class Stack(AbstractBijection):
         x_parts = self._split_and_squeeze(x)
         ys_log_det = [
             b.transform_and_log_det(x, condition)
-            for b, x in zip(self.bijections, x_parts, strict=True)
+            for b, x in zip(self.bijections, x_parts)
         ]
 
-        y_parts, log_dets = zip(*ys_log_det, strict=True)
+        y_parts, log_dets = zip(*ys_log_det)
         return jnp.stack(y_parts, self.axis), sum(log_dets)
 
     def inverse_and_log_det(self, y, condition=None):
         y_parts = self._split_and_squeeze(y)
         xs_log_det = [
             b.inverse_and_log_det(y, condition)
-            for b, y in zip(self.bijections, y_parts, strict=True)
+            for b, y in zip(self.bijections, y_parts)
         ]
-        x_parts, log_dets = zip(*xs_log_det, strict=True)
+        x_parts, log_dets = zip(*xs_log_det)
         return jnp.stack(x_parts, self.axis), sum(log_dets)
 
     def _split_and_squeeze(self, array: Array):

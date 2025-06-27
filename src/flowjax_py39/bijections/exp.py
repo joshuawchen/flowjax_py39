@@ -4,7 +4,7 @@ from typing import ClassVar
 
 import jax.numpy as jnp
 
-from flowjax.bijections.bijection import AbstractBijection
+from flowjax_py39.bijections.bijection import AbstractBijection
 
 
 class Exp(AbstractBijection):

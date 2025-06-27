@@ -1,17 +1,18 @@
 """Training loops."""
 
 from collections.abc import Callable
+from typing import Union
 
 import equinox as eqx
 import jax.numpy as jnp
 import jax.random as jr
 import optax
-import paramax
+import paramax_py39
 from jaxtyping import ArrayLike, PRNGKeyArray, PyTree, Scalar
 from tqdm import tqdm
 
-from flowjax.train.losses import MaximumLikelihoodLoss
-from flowjax.train.train_utils import (
+from flowjax_py39.train.losses import MaximumLikelihoodLoss
+from flowjax_py39.train.train_utils import (
     count_fruitless,
     get_batches,
     step,
@@ -26,7 +27,7 @@ def fit_to_key_based_loss(
     loss_fn: Callable[[PyTree, PyTree, PRNGKeyArray], Scalar],
     steps: int,
     learning_rate: float = 5e-4,
-    optimizer: optax.GradientTransformation | None = None,
+    optimizer: Union[optax.GradientTransformation, None] = None,
     show_progress: bool = True,
 ):
     """Train a pytree, using a loss with params, static and key as arguments.
@@ -53,7 +54,7 @@ def fit_to_key_based_loss(
     params, static = eqx.partition(
         tree,
         eqx.is_inexact_array,
-        is_leaf=lambda leaf: isinstance(leaf, paramax.NonTrainable),
+        is_leaf=lambda leaf: isinstance(leaf, paramax_py39.NonTrainable),
     )
     opt_state = optimizer.init(params)
 
@@ -80,10 +81,10 @@ def fit_to_data(
     dist: PyTree,  # Custom losses may support broader types than AbstractDistribution
     x: ArrayLike,
     *,
-    condition: ArrayLike | None = None,
-    loss_fn: Callable | None = None,
+    condition: Union[ArrayLike, None] = None,
+    loss_fn: Union[Callable, None] = None,
     learning_rate: float = 5e-4,
-    optimizer: optax.GradientTransformation | None = None,
+    optimizer: Union[optax.GradientTransformation, None] = None,
     max_epochs: int = 100,
     max_patience: int = 5,
     batch_size: int = 100,
@@ -132,7 +133,7 @@ def fit_to_data(
     params, static = eqx.partition(
         dist,
         eqx.is_inexact_array,
-        is_leaf=lambda leaf: isinstance(leaf, paramax.NonTrainable),
+        is_leaf=lambda leaf: isinstance(leaf, paramax_py39.NonTrainable),
     )
     best_params = params
     opt_state = optimizer.init(params)
@@ -152,7 +153,7 @@ def fit_to_data(
 
         # Train epoch
         batch_losses = []
-        for batch in zip(*get_batches(train_data, batch_size), strict=True):
+        for batch in zip(*get_batches(train_data, batch_size)):
             key, subkey = jr.split(key)
             params, opt_state, loss_i = step(
                 params,
@@ -168,7 +169,7 @@ def fit_to_data(
 
         # Val epoch
         batch_losses = []
-        for batch in zip(*get_batches(val_data, batch_size), strict=True):
+        for batch in zip(*get_batches(val_data, batch_size)):
             key, subkey = jr.split(key)
             loss_i = loss_fn(params, static, *batch, key=subkey)
             batch_losses.append(loss_i)

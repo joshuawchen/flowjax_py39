@@ -6,7 +6,7 @@ import jax.numpy as jnp
 import pytest
 from jax import random
 
-from flowjax.bijections import Affine, Chain, Coupling, Flip, Permute, Scan
+from flowjax_py39.bijections import Affine, Chain, Coupling, Flip, Permute, Scan
 
 
 def test_chain_dunders():
@@ -77,6 +77,6 @@ def test_scan(name):
     realised = scan.transform_and_log_det(x, condition)
     assert jnp.all(
         jnp.array(
-            [pytest.approx(a) == b for (a, b) in zip(expected, realised, strict=True)],
+            [pytest.approx(a) == b for (a, b) in zip(expected, realised)],
         ),
     )

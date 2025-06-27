@@ -1,6 +1,7 @@
 "General tests for bijections (including transformers)."
 
 from functools import partial
+from typing import Union
 
 import equinox as eqx
 import jax
@@ -8,7 +9,7 @@ import jax.numpy as jnp
 import jax.random as jr
 import pytest
 
-from flowjax.bijections import (
+from flowjax_py39.bijections import (
     AbstractBijection,
     AdditiveCondition,
     Affine,
@@ -42,8 +43,8 @@ from flowjax.bijections import (
     TriangularAffine,
     Vmap,
 )
-from flowjax.bijections.planar import _UnconditionalPlanar
-from flowjax.root_finding import bisection_search, root_finder_to_inverter
+from flowjax_py39.bijections.planar import _UnconditionalPlanar
+from flowjax_py39.root_finding import bisection_search, root_finder_to_inverter
 
 DIM = 3
 COND_DIM = 2
@@ -296,7 +297,7 @@ def test_transform_inverse_and_log_dets(constructor):
 
 class _TestBijection(AbstractBijection):
     shape: tuple[int, ...] = ()
-    cond_shape: tuple[int, ...] | None = None
+    cond_shape: Union[tuple[int, ...], None] = None
 
     def transform_and_log_det(self, x, condition=None):
         return x, jnp.zeros(())

@@ -1,13 +1,14 @@
 """Orthogonal transformations."""
+from typing import Union
 
 import jax.numpy as jnp
 from jax import Array
 from jax.scipy import fft
 from jaxtyping import ArrayLike
-from paramax import AbstractUnwrappable, Parameterize
+from paramax_py39 import AbstractUnwrappable, Parameterize #
 
-from flowjax.bijections.bijection import AbstractBijection
-from flowjax.utils import arraylike_to_array
+from flowjax_py39.bijections.bijection import AbstractBijection
+from flowjax_py39.utils import arraylike_to_array
 
 
 class Householder(AbstractBijection):
@@ -41,7 +42,7 @@ class Householder(AbstractBijection):
     """
 
     shape: tuple[int, ...]
-    unit_vec: Array | AbstractUnwrappable
+    unit_vec: Union[Array, AbstractUnwrappable]
     cond_shape = None
 
     def __init__(self, params: ArrayLike):
@@ -54,10 +55,10 @@ class Householder(AbstractBijection):
     def _householder(self, x: Array) -> Array:
         return x - 2 * self.unit_vec * (x @ self.unit_vec)
 
-    def transform_and_log_det(self, x: jnp.ndarray, condition: Array | None = None):
+    def transform_and_log_det(self, x: jnp.ndarray, condition: Union[Array, None] = None):
         return self._householder(x), jnp.zeros(())
 
-    def inverse_and_log_det(self, y: Array, condition: Array | None = None):
+    def inverse_and_log_det(self, y: Array, condition: Union[Array, None] = None):
         return self._householder(y), jnp.zeros(())
 
 
@@ -79,10 +80,10 @@ class DiscreteCosine(AbstractBijection):
         self.shape = shape
         self.axis = axis
 
-    def transform_and_log_det(self, x: jnp.ndarray, condition: Array | None = None):
+    def transform_and_log_det(self, x: jnp.ndarray, condition: Union[Array, None] = None):
         y = fft.dct(x, norm="ortho", axis=self.axis)
         return y, jnp.zeros(())
 
-    def inverse_and_log_det(self, y: Array, condition: Array | None = None):
+    def inverse_and_log_det(self, y: Array, condition: Union[Array, None] = None):
         x = fft.idct(y, norm="ortho", axis=self.axis)
         return x, jnp.zeros(())
