@@ -104,6 +104,8 @@ def arraylike_to_array(
         err_name: Name of the input in the error message. Defaults to "input".
         **kwargs: Keyword arguments passed to jnp.asarray.
     """
+    if arr is None:
+        raise TypeError(f"Expected {err_name} to be array-like; got {type(arr).__name__}.")
     try:
         return jnp.asarray(arr, **kwargs)
     except Exception:
