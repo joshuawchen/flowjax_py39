@@ -237,7 +237,7 @@ test_cases = [
         method=_TestDist((), ()).sample,
         args=(jr.key(0),),
         error=TypeError,
-        match="Expected condition to be arraylike",
+        match="Expected condition to be array-like",
     ),
     _TestCase(
         name="wrong x shape log prob",
